@@ -1,2 +1,3 @@
 name: web
+replicas: 1
 image: nginx:latest
