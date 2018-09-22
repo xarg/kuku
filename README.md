@@ -7,14 +7,15 @@ kuku generates kubernetes yaml manifests using python templates. It is similar t
 
 ## Installation:
 
-    pip install kuku
+```bash
+pip install kuku
+```
 
 ## Usage
 
 Suppose you want to create a k8s service using a template where you define the service `name`, `internalPort` and `externalPort`.
 
 Given the following `service.py` template:
-
 ```python
 from kubernetes import client
 
@@ -35,47 +36,55 @@ def template(context):
 ```
 
 You can now generate a yaml output from the above template using `kuku` by running: 
+```bash
+$ ls .
+service.py 
+$ kuku generate -s name=kuku-web,internalPort=80,externalPort=80 .
+```
+the above produces:
+```yaml
+# Source: service.py
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuku-web
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: kuku-web
+  type: NodePort
+```
 
-    $ ls .
-    service.py 
-    $ kuku generate -s name=kuku-web,internalPort=80,externalPort=80 .
-    # Source: service.py
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: kuku-web
-    spec:
-      ports:
-      - port: 80
-        targetPort: 80
-      selector:
-        app: kuku-web
-      type: NodePort
-      
       
 You can also combine the above with `kubectl apply -f -` to actually create your service on k8s:
-
-    $ kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl apply -f -
+```bash
+kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl apply -f -
+```
     
 Same as above, but let's make it shorter:
-
-    $ kuku apply -s name=kuku-web,internalPort=80,externalPort=80 .
+```bash
+kuku apply -s name=kuku-web,internalPort=80,externalPort=80 .
+```
+ 
    
 Finally to delete it: 
-
-    $ kuku delete -s name=kuku-web,internalPort=80,externalPort=80 .
-    
-    # same thing as above
-    
-    $ kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl delete -f - 
+```bash
+kuku delete -s name=kuku-web,internalPort=80,externalPort=80 .
+# same as above
+kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl delete -f - 
+```
 
 ## Templates      
 
 Templates are python files that are defining a function called `template` that accepts a dict argument `context` and 
 returns a k8s object or a list of k8s objects:
 
-    def template(context):
-        return V1Namespace(name=context['namespace'])  # example k8s object 
+```python
+def template(context):
+    return V1Namespace(name=context['namespace'])  # example k8s object 
+```
 
 You can create multiple template files each defining their own `template` function.
 `kuku` uses the k8s objects (aka models) from [official kubernetes python client package](https://github.com/kubernetes-client/python).
@@ -86,7 +95,9 @@ You can find them all [here](https://github.com/kubernetes-client/python/blob/ma
 
 Similar to [helm](https://helm.sh/) `kuku` accepts defining it's context variables from the CLI:
 
-    kuku -s namespace=kuku .
+```bash
+kuku -s namespace=kuku .
+```
     
 `-s namespace=kuku` will be passed to the `context` argument in your `template` function. Run `kuku -h` to find out more.
 
@@ -125,9 +136,13 @@ Contributions (code, issues, docs, etc..) are welcome!
 
 Once you have your python environment setup:
 
-    pip install -e .[dev] # will install dev dependencies
-    pre-commit install # will install pre-commit hooks for code quality checking 
+```bash
+pip install -e .[dev] # will install dev dependencies
+pre-commit install # will install pre-commit hooks for code quality checking 
+```
     
 Publish a new version to pypi:
+```bash
+python setup.py upload
+```
 
-    python setup.py upload
