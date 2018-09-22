@@ -1,5 +1,7 @@
 # kuku
 
+[![Build Status](https://travis-ci.org/xarg/kuku.svg?branch=master)](https://travis-ci.org/xarg/kuku)
+
 kuku generates kubernetes yaml manifests using python templates. It is similar to [helm](https://helm.sh/) in usage (templates dir, value files, etc..).
 
 
