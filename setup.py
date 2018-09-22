@@ -13,7 +13,7 @@ DESCRIPTION = "Kubernetes templating tool."
 URL = "https://github.com/xarg/kuku"
 EMAIL = "alex@plugaru.org"
 AUTHOR = "Alex Plugaru"
-REQUIRES_PYTHON = ">=3.6.0"
+REQUIRES_PYTHON = ">=3.5.0"
 VERSION = "0.1"
 
 REQUIRED = ["docopt", "PyYAML", "kubernetes"]
