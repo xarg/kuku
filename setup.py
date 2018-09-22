@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# Note: To use the 'upload' functionality of this file, you must:
-#   $ pip install twine
 
 import io
 import os
@@ -13,15 +9,18 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = "kuku"
-DESCRIPTION = "A simple."
+DESCRIPTION = "Kubernetes templating tool."
 URL = "https://github.com/xarg/kuku"
 EMAIL = "alex@plugaru.org"
 AUTHOR = "Alex Plugaru"
 REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.1"
 
-# What packages are required for this module to be executed?
 REQUIRED = ["docopt", "PyYAML", "kubernetes"]
+
+EXTRAS = {
+    "dev": ["twine", "wheel", "pytest", "pytest-cov", "black", "mypy", "pre-commit"]
+}
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -99,6 +98,7 @@ setup(
     py_modules=["kuku"],
     entry_points={"console_scripts": ["kuku=kuku.cli:cli"]},
     install_requires=REQUIRED,
+    extras_require=EXTRAS,
     include_package_data=True,
     license="Apache",
     classifiers=[
