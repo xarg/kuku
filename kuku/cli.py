@@ -1,3 +1,5 @@
+import sys
+
 from docopt import docopt
 
 from kuku.__version__ import __version__
@@ -12,14 +14,15 @@ def cli():
     cli_docs = """kuku: Kubernetes templating tool.
     
     Usage:
-      kuku apply [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
-      kuku delete [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
-      kuku generate [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
+      kuku apply [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
+      kuku delete [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
+      kuku generate [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR> 
       kuku (-h | --help)
       kuku --version
       
     Options:
       -h --help                     Show this screen.
+      -v --verbose                  Dump debug info to stderr.
       --version                     Show version.
       -s KEY=VALUE --set KEY=VALUE  Set values on the command line (accepts multiple options or separate values with commas: Ex: -s key1=val1,key2=val2).
       -f FILE --file FILE           Specify values in a YAML file (accepts multiple options).
@@ -41,9 +44,13 @@ def cli():
     # Render templates
     rendering = generate(context, templates)
 
+    output = dump(rendering)
     if arguments["generate"]:
         # print yaml
-        print(dump(rendering))
+        print(output)
+
+    if arguments["--verbose"]:
+        print(output, file=sys.stderr)
 
 
 if __name__ == "__main__":
