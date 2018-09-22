@@ -7,9 +7,9 @@ from kuku.utils.dict import merge_deep
 
 
 def resolve(values: List[str], value_files: List[str]) -> Context:
-    """Resolve values in """
+    """Resolve values from cli and value files"""
 
-    context = {}
+    context: Context = {}
 
     # first read values from files
     for value_file in value_files:
@@ -18,11 +18,11 @@ def resolve(values: List[str], value_files: List[str]) -> Context:
 
     for key_values in values:
         if "," in key_values:
-            key_values = key_values.split(",")
+            exntended_key_values = key_values.split(",")
         else:
-            key_values = [key_values]
+            exntended_key_values = [key_values]
 
-        for key_value in key_values:
+        for key_value in exntended_key_values:
             if "=" not in key_value:
                 print("Invalid key=value format for: {}".format(key_value))
                 exit(1)

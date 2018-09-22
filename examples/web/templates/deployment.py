@@ -1,19 +1,27 @@
-from kuku.objects import Deployment
+from kubernetes import client
 
 
 def template(context):
     labels = {"app": context["name"]}
 
-    template_spec = {}
+    template_spec = client.V1PodSpec(
+        containers=[client.V1Container(name=context["name"], image=context["image"])]
+    )
+
     if "nodeSelector" in context:
-        template_spec["nodeSelector"] = context["nodeSelector"]
+        template_spec.node_selector = client.V1NodeSelector(
+            node_selector_terms=context["nodeSelector"]
+        )
 
-    template_spec["containers"] = [{"name": context["name"], "image": context["image"]}]
-
-    return Deployment(
-        metadata={"name": context["name"], "labels": labels},
-        spec={
-            "replicas": context["replicas"],
-            "template": {"metadata": {"labels": labels}, "spec": template_spec},
-        },
+    return client.V1Deployment(
+        api_version="extensions/v1beta1",
+        kind="Deployment",
+        metadata=client.V1ObjectMeta(name=context["name"]),
+        spec=client.V1DeploymentSpec(
+            replicas=context["replicas"],
+            selector=client.V1LabelSelector(match_labels=labels),
+            template=client.V1PodTemplateSpec(
+                metadata=client.V1ObjectMeta(labels=labels), spec=template_spec
+            ),
+        ),
     )

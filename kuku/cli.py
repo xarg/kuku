@@ -5,6 +5,7 @@ from kuku.templates import load
 from kuku.values import resolve
 from kuku.generate import generate
 from kuku.dump import dump
+from kubernetes import config
 
 
 def cli():
@@ -29,6 +30,10 @@ def cli():
 
     # Parse cli.
     arguments = docopt(cli_docs, version=__version__)
+
+    # Load k8s config
+    config.load_kube_config()
+
     # Read templates
     templates = load(arguments["<TEMPLATES_DIR>"])
     # Resolve values
