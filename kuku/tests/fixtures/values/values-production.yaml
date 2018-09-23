@@ -1,0 +1,14 @@
+env: production
+nodeSelector:
+  node-label: pool-2
+resources:
+  requests:
+    memory: 50Gi
+    cpu: 6
+configmaps:
+- name: map1
+  value: |-
+    some long
+    string multiline
+- name: map2
+  value: map value

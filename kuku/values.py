@@ -3,7 +3,7 @@ from typing import List
 import yaml
 
 from kuku.types import Context
-from kuku.utils.dict import merge_deep
+from kuku.utils.dict import merge_deep, unroll
 
 
 def resolve(values: List[str], value_files: List[str]) -> Context:
@@ -18,14 +18,18 @@ def resolve(values: List[str], value_files: List[str]) -> Context:
 
     for key_values in values:
         if "," in key_values:
-            exntended_key_values = key_values.split(",")
+            extended_key_values = key_values.split(",")
         else:
-            exntended_key_values = [key_values]
+            extended_key_values = [key_values]
 
-        for key_value in exntended_key_values:
+        for key_value in extended_key_values:
+            format_error = "Invalid key=value format for: {}".format(key_value)
             if "=" not in key_value:
-                print("Invalid key=value format for: {}".format(key_value))
-                exit(1)
+                raise ValueError(format_error)
+
             key, value = key_value.split("=")
-            context = merge_deep({key: value}, context)
+            if key == "":
+                raise ValueError(format_error)
+
+            context = merge_deep(unroll(key, value), context)
     return context

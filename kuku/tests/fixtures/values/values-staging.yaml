@@ -1,0 +1,17 @@
+env: staging
+nodeSelector:
+  node-label: pool-1
+resources:
+  limits:
+    memory: 10Gi
+    cpu:
+  requests:
+    memory: Gi
+    cpu: 2
+configmaps:
+- name: map1
+  value: |-
+    some long
+    string multiline
+- name: map2
+  value: map value
