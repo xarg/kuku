@@ -2,15 +2,6 @@ from kubernetes import client
 
 
 def template(context):
-    template_spec = client.V1PodSpec(
-        containers=[client.V1Container(name=context["name"], image=context["image"])]
-    )
-
-    if "nodeSelector" in context:
-        template_spec.node_selector = client.V1NodeSelector(
-            node_selector_terms=context["nodeSelector"]
-        )
-
     return client.V1beta1Ingress(
         api_version="extensions/v1beta1",
         kind="Ingress",

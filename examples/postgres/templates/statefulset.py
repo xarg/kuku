@@ -27,15 +27,19 @@ def template(context):
             client.V1VolumeMount(name=pvc["name"], mount_path=pvc["mountPath"])
         )
 
-    if "configmaps" in context:
+    if "configmap" in context:
         volume_name = "{}-config".format(context["name"])
         pod_spec_volumes.append(
-            client.V1Volume(name=volume_name, config_map=context["name"])
+            client.V1Volume(
+                name=volume_name,
+                config_map=client.V1ConfigMapVolumeSource(name=context["name"]),
+            )
         )
         pod_spec_volume_mounts.append(
             client.V1VolumeMount(name=volume_name, mount_path="/etc/postgresql/")
         )
 
+    labels = {"app": context["name"]}
     pg_isready_exec = client.V1ExecAction(command=["gosu postgres pg_isready"])
 
     return client.V1StatefulSet(
@@ -45,9 +49,9 @@ def template(context):
         spec=client.V1StatefulSetSpec(
             service_name=context["name"],
             replicas=context["replicas"],
-            selector={"app": context["name"]},
+            selector=client.V1LabelSelector(match_labels=labels),
             template=client.V1PodTemplateSpec(
-                metadata=client.V1ObjectMeta(labels={"name": context["name"]}),
+                metadata=client.V1ObjectMeta(labels=labels),
                 spec=client.V1PodSpec(
                     containers=[
                         client.V1Container(

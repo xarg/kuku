@@ -1,4 +1,4 @@
-name: web
+name: nginx
 replicas: 1
 image: nginx:latest
 internalPort: 80

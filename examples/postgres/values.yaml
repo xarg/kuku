@@ -19,12 +19,7 @@ pvc:
   size: 500Gi
   mountPath: /var/lib/postgresql/data/
 
-env:
-- name: BACKUP
-  value: "true"
-
-configmaps:
-- name: postgresql.conf
-  value: |
+configmap:
+- postgresql.conf: |
     # Connectivity
     max_connections = 500
