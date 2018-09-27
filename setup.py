@@ -16,7 +16,7 @@ AUTHOR = "Alex Plugaru"
 REQUIRES_PYTHON = ">=3.5.0"
 VERSION = "0.1"
 
-REQUIRED = ["docopt", "PyYAML", "kubernetes"]
+REQUIRED = ["docopt", "PyYAML", "requests", "kubernetes"]
 
 EXTRAS = {
     "dev": ["twine", "wheel", "pytest", "pytest-cov", "black", "mypy", "pre-commit"]

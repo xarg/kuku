@@ -3,7 +3,6 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - python setup.py develop
   - pip install -e .[dev]
 script:
   - black .
