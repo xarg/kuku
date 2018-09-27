@@ -8,7 +8,7 @@ kuku renders kubernetes yaml manifests using python templates. It is similar to 
 ## Installation:
 
 ```bash
-pip install kuku
+pip3 install kuku
 ```
 
 ## Usage
