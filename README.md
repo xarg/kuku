@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/xarg/kuku.svg?branch=master)](https://travis-ci.org/xarg/kuku)
 
-kuku generates kubernetes yaml manifests using python templates. It is similar to [helm](https://helm.sh/) in usage (templates dir, value files, etc..).
+kuku renders kubernetes yaml manifests using python templates. It is similar to [helm](https://helm.sh/) in usage (templates dir, value files, etc..).
 
 
 ## Installation:
@@ -39,7 +39,7 @@ You can now generate a yaml output from the above template using `kuku` by runni
 ```bash
 $ ls .
 service.py 
-$ kuku generate -s name=kuku-web,internalPort=80,externalPort=80 .
+$ kuku render -s name=kuku-web,internalPort=80,externalPort=80 .
 ```
 the above produces:
 ```yaml
@@ -60,7 +60,7 @@ spec:
       
 You can also combine the above with `kubectl apply -f -` to actually create your service on k8s:
 ```bash
-kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl apply -f -
+kuku render -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl apply -f -
 ```
     
 Same as above, but let's make it shorter:
@@ -73,7 +73,7 @@ Finally to delete it:
 ```bash
 kuku delete -s name=kuku-web,internalPort=80,externalPort=80 .
 # same as above
-kuku generate -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl delete -f - 
+kuku render -s name=kuku-web,internalPort=80,externalPort=80 . | kubectl delete -f - 
 ```
 
 ## Templates      

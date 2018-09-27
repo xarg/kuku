@@ -1,14 +1,14 @@
 # A simple web application deployment example 
 
-If you run the command below it will generate the k8s yaml file that then can be used with `kubectl` for example.
+If you run the command below it will render the k8s yaml file that then can be used with `kubectl` for example.
 
-    kuku generate -f values.yaml .
+    kuku render -f values.yaml .
     
 The dot at the end is the path where the `templates` dir is located.
     
-You can then use the output of `kuku generate` to apply the changes against your k8s cluster:
+You can then use the output of `kuku render` to apply the changes against your k8s cluster:
 
-    kuku generate -f values.yaml . | kubectl apply -f -
+    kuku render -f values.yaml . | kubectl apply -f -
     
     
 You can also apply the changes directly:

@@ -16,7 +16,7 @@ def cli():
     Usage:
       kuku apply [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR>
       kuku delete [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR>
-      kuku generate [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR>
+      kuku render [-v] [-f <FILE>]... [-s <key=value>]... <TEMPLATES_DIR>
       kuku (-h | --help)
       kuku --version
 
@@ -57,16 +57,16 @@ def cli():
     rendering = render(context, templates)
 
     output = dump(rendering)
-    if arguments["generate"]:
+    if arguments["render"]:
         # print yaml
         print(output)
 
     if arguments["apply"]:
-        print("Not implemented yet. Use kuku generate ... | kubectl apply -f-")
+        print("Not implemented yet. Use kuku render ... | kubectl apply -f-")
         exit(1)
 
     if arguments["delete"]:
-        print("Not implemented yet. Use kuku generate ... | kubectl delete -f-")
+        print("Not implemented yet. Use kuku render ... | kubectl delete -f-")
         exit(1)
 
     if arguments["--verbose"]:
