@@ -1,14 +1,10 @@
-import yaml
 from types import MethodType
 
 from kuku.types import Rendering
 from kuku.utils.str import camelize
+from kuku.utils.yaml import dumper
 
 OBJECT_SEPARATOR = "\n---\n"
-
-noalias_dumper = yaml.dumper.SafeDumper
-noalias_dumper.ignore_aliases = lambda self, data: True  # type: ignore
-dumper = lambda data: yaml.dump(data, default_flow_style=False, Dumper=noalias_dumper)
 
 
 def _camelized_to_dict(self):
