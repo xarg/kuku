@@ -14,7 +14,6 @@ URL = "https://github.com/xarg/kuku"
 EMAIL = "alex@plugaru.org"
 AUTHOR = "Alex Plugaru"
 REQUIRES_PYTHON = ">=3.5.0"
-VERSION = "0.1"
 
 REQUIRED = ["docopt", "PyYAML", "requests", "kubernetes"]
 
@@ -39,11 +38,8 @@ except FileNotFoundError:
 
 # Load the package's __version__.py module as a dictionary.
 about = {}
-if not VERSION:
-    with open(os.path.join(here, NAME, "__version__.py")) as f:
-        exec(f.read(), about)
-else:
-    about["__version__"] = VERSION
+with open(os.path.join(here, NAME, "__version__.py")) as f:
+    exec(f.read(), about)
 
 
 class UploadCommand(Command):
