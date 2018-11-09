@@ -1,7 +1,6 @@
 from types import MethodType
 
 from kuku.types import Rendering
-from kuku.utils.str import camelize
 from kuku.utils.yaml import dumper
 
 OBJECT_SEPARATOR = "\n---\n"
@@ -12,23 +11,20 @@ def _camelized_to_dict(self):
 
     result = {}
 
-    for attr, _ in self.swagger_types.items():
+    for attr, camel_attr in self.attribute_map.items():
         value = getattr(self, attr)
 
-        # we need the attribute camelized for YAML, also ignore the _ prefixes.
-        attr = camelize(attr.lstrip("_"))
-
         if isinstance(value, list):
-            result[attr] = list(
+            result[camel_attr] = list(
                 map(
                     lambda x: _camelized_to_dict(x) if hasattr(x, "to_dict") else x,
                     value,
                 )
             )
         elif hasattr(value, "to_dict"):
-            result[attr] = _camelized_to_dict(value)
+            result[camel_attr] = _camelized_to_dict(value)
         elif isinstance(value, dict):
-            result[attr] = dict(
+            result[camel_attr] = dict(
                 map(
                     lambda item: (item[0], item[1].to_dict())
                     if hasattr(item[1], "to_dict")
@@ -39,7 +35,7 @@ def _camelized_to_dict(self):
         else:
             # ignore None values - we don't need the for the output
             if value is not None:
-                result[attr] = value
+                result[camel_attr] = value
 
     return result
 
