@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Config
+preferences: {}
+current-context: dev
+
+clusters:
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://5.6.7.8
+  name: development
+
+users:
+- name: developer
+  user:
+    password: fake-password
+    username: fake-user
+
+contexts:
+- context:
+    cluster: development
+    user: developer
+  name: dev

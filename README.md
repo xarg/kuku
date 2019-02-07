@@ -11,6 +11,15 @@ kuku renders kubernetes yaml manifests using python templates. It is similar to 
 pip3 install kuku
 ```
 
+or using the docker image:
+
+```bash
+docker pull xarg/kuku
+
+# Example usage (see more below):
+docker run -v $(pwd)/:/tmp/ --rm xarg/kuku render -f /tmp/your-values.yaml /tmp/your-templates/ | kubectl apply -
+```
+
 ## Usage
 
 Suppose you want to create a k8s service using a template where you define the service `name`, `internalPort` and `externalPort`.
