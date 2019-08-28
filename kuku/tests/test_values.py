@@ -14,39 +14,36 @@ VALUES_PRODUCTION_FILE = os.path.join(HERE, "fixtures/values/values-production.y
 @pytest.mark.parametrize(
     "values, expected",
     [
-        (["k=v"], [{"k": "v"}]),
-        (["k1=v1,k2=v2"], [{"k1": "v1", "k2": "v2"}]),
-        (["k1=v1,k2=v2", "k3=v3"], [{"k1": "v1", "k2": "v2"}, {"k3": "v3"}]),
-        (["k="], [{"k": ""}]),
+        (["k=v"], {"k": "v"}),
+        (["k1=v1,k2=v2"], {"k1": "v1", "k2": "v2"}),
+        (["k1=v1,k2=v2", "k3=v3"], {"k1": "v1", "k2": "v2", "k3": "v3"}),
+        (["k="], {"k": ""}),
     ],
 )
 def test_valid_values(values, expected):
-    assert resolve(values, []) == Context(*expected)
+    assert resolve(values, []) == expected
 
 
 @pytest.mark.parametrize(
     "values, expected",
     [
-        (["a.b=v1", "a.c=v2"], [{"a": {"c": "v2"}}, {"a": {"b": "v1"}}]),
-        (
-            ["a.b.c=v1", "a.b.d=v2"],
-            [{"a": {"b": {"d": "v2"}}}, {"a": {"b": {"c": "v1"}}}],
-        ),
+        (["a.b=v1", "a.c=v2"], {"a": {"b": "v1", "c": "v2"}}),
+        (["a.b.c=v1", "a.b.d=v2"], {"a": {"b": {"c": "v1", "d": "v2"}}}),
     ],
 )
 def test_nested_dicts(values, expected):
-    assert resolve(values, []) == Context(*expected)
+    assert resolve(values, []) == expected
 
 
 @pytest.mark.parametrize(
     "values, expected",
     [
-        (["a.0.b=v1", "a.0.c=v2"], [{"a": [{"c": "v2"}]}, {"a": [{"b": "v1"}]}]),
+        (["a.0.b=v1", "a.0.c=v2"], {"a": [{"c": "v2"}]}),
         # (["a.0.b=v1", "a.1.c=v2"], [{"a": [{"c": "v2"}]}, {"a": [{"b": "v1"}]}]),
     ],
 )
 def test_nested_lists(values, expected):
-    assert resolve(values, []) == Context(*expected)
+    assert resolve(values, []) == expected
 
 
 @pytest.mark.parametrize(

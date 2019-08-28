@@ -1,8 +1,7 @@
 from typing import Dict, Any, Callable, List
-from collections import ChainMap
 
 # Context is used to pass variables
-Context = ChainMap
+Context = Dict[str, Any]
 
 # template file path -> template function
 Templates = Dict[str, Callable]

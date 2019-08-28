@@ -3,17 +3,20 @@ from typing import List
 import yaml
 
 from kuku.types import Context
-from kuku.utils.dict import unroll_key
+from kuku.utils.dict import unroll_key, merge_deep
 
 
 def resolve(values: List[str], value_files: List[str]) -> Context:
     """Resolve values from cli and value files"""
 
-    chain = []
-    resolved_key_values = []
+    context: Context = {}
+
+    for value_file in value_files:
+        with open(value_file) as fd:
+            context = merge_deep(yaml.safe_load(fd), context)
 
     # arguments from the CLI have priority
-    for key_values in reversed(values):
+    for key_values in values:
         if "," in key_values:
             extended_key_values = key_values.split(",")
         else:
@@ -28,12 +31,6 @@ def resolve(values: List[str], value_files: List[str]) -> Context:
             if not key:
                 raise ValueError(format_error)
 
-            resolved_key_values.append(unroll_key(key, value))
+            context = merge_deep(unroll_key(key, value), context)
 
-    chain.extend(resolved_key_values)
-
-    for value_file in reversed(value_files):
-        with open(value_file) as fd:
-            chain.append(yaml.load(fd))
-
-    return Context(*chain)
+    return context
