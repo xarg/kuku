@@ -48,11 +48,13 @@ def dump(rendering: Rendering) -> str:
         template_output = []
         template_header = "# Source: {}\n".format(template_path)
         for k8s_object in k8s_objects:
-            # Override the default to_dict method so we can update the k8s keys
             if not k8s_object:
+                if k8s_object is None:
+                    continue
                 raise ValueError(
                     "Template '{}' returned {} object".format(template_path, k8s_object)
                 )
+            # Override the default to_dict method so we can update the k8s keys
             k8s_object.to_dict = MethodType(_camelized_to_dict, k8s_object)
             k8s_object = k8s_object.to_dict()
 
