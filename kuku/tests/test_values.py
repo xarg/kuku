@@ -39,11 +39,33 @@ def test_nested_dicts(values, expected):
     "values, expected",
     [
         (["a.0.b=v1", "a.0.c=v2"], {"a": [{"c": "v2"}]}),
-        # (["a.0.b=v1", "a.1.c=v2"], [{"a": [{"c": "v2"}]}, {"a": [{"b": "v1"}]}]),
+        (["a.0=v1", "a.0=v2"], {"a": ["v2"]}),
+        (["a.0.b=v1", "a.1.c=v2"], {"a": [{"b": "v1"}, {"c": "v2"}]}),
     ],
 )
 def test_nested_lists(values, expected):
     assert resolve(values, []) == expected
+
+
+def test_nested_lists_invalid_index():
+    with pytest.raises(ValueError, match=".* list 'a' has not been given a value."):
+        resolve(["a.1=v1"], [])
+
+
+def test_nested_lists_with_value_file(tmp_path):
+    p = tmp_path / "test.yaml"
+    p.write_text(yaml.dump({"a": ["b", "c"]}))
+    # We replace
+    resolved = resolve(["a.0=new"], [str(p)])
+    assert resolved == {"a": ["new", "c"]}
+
+    # We append
+    resolved = resolve(["a.2=d"], [str(p)])
+    assert resolved == {"a": ["b", "c", "d"]}
+
+    # The index '3' is out of bound (neither a replacement nor an append)
+    with pytest.raises(ValueError):
+        resolve(["a.3=new"], [str(p)])
 
 
 @pytest.mark.parametrize(
