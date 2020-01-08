@@ -1,11 +1,11 @@
 import json
 from typing import Dict, List, Union, Any
 
-from kuku.types import IgnoredListItem
-
 DictOrList = Union[Dict, List]
 
 TEMPORARY_LITERAL_SEPARATOR = "(kuku-dot-goes-here)"
+# Placeholder list item to be ignored for deep merges of lists: must be JSON serializable !
+IGNORED_LIST_ITEM = "(kuku-ignored-list-item)"
 
 
 def unroll_key(key, value) -> Dict[str, Any]:
@@ -29,7 +29,8 @@ def unroll_key(key, value) -> Dict[str, Any]:
             if str(index) == item:
                 res = []
                 for i in range(index + 1):
-                    res.append(IgnoredListItem if i != index else walk(path[1:]))
+                    # Insert placeholders that hopefully will be replaced with other value or from value file.
+                    res.append(IGNORED_LIST_ITEM if i != index else walk(path[1:]))
                 return res
         except ValueError:
             pass
@@ -49,6 +50,20 @@ def merge_deep(src: dict, dst: dict) -> dict:
             # get node or create one
             node = dst.setdefault(key, {})
             merge_deep(value, node)
+        elif isinstance(value, list):
+            if key not in dst:
+                dst[key] = value
+            else:
+                out = []
+                for i in range(max(len(dst[key]), len(value))):
+                    if i >= len(dst[key]):
+                        out.extend(value[i:])
+                        break
+                    if i < len(value) and value[i] != IGNORED_LIST_ITEM:
+                        out.append(value[i])
+                    else:
+                        out.append(dst[key][i])
+                dst[key] = out
         else:
             dst[key] = value
 
